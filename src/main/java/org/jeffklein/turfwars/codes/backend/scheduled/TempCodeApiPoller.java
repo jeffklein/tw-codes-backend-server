@@ -27,7 +27,7 @@ public class TempCodeApiPoller {
     @Scheduled(fixedRate = 20000)
     //TODO: this works exactly once then blows up with a Unique constraint violation. write a test case in the DAO module
     public void pollServerForTempCodes() {
-        TempCodeApiJsonResponse apiResponse = apiClient.getJsonResponse();
+        TempCodeApiJsonResponse apiResponse = apiClient.getTempCodeApiJsonResponse();
         TempCodeApiResponse toPersist = this.copyTempCodesFromJsonResponse(apiResponse.getTempCodes(), new TempCodeApiResponse());
         toPersist.setTimestamp(apiResponse.getTimestamp());
         toPersist.setNextUpdate(apiResponse.getNextUpdate());
