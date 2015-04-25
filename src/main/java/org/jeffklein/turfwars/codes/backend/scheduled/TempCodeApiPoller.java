@@ -25,6 +25,7 @@ public class TempCodeApiPoller {
     private TempCodeService tempCodeService;
 
     @Scheduled(fixedRate = 20000)
+    //TODO: this works exactly once then blows up with a Unique constraint violation. write a test case in the DAO module
     public void pollServerForTempCodes() {
         TempCodeApiJsonResponse apiResponse = apiClient.getJsonResponse();
         TempCodeApiResponse toPersist = this.copyTempCodesFromJsonResponse(apiResponse.getTempCodes(), new TempCodeApiResponse());
@@ -33,6 +34,7 @@ public class TempCodeApiPoller {
         tempCodeService.saveTempCodeApiResponse(toPersist);
     }
 
+    // TODO: copying fields one at a time is for the birds. need annotation based DTO copying here...
     private TempCodeApiResponse copyTempCodesFromJsonResponse(Set<org.jeffklein.turfwars.codes.client.TempCode> jsonCodes,
                                                         TempCodeApiResponse apiResponse) {
         Set<TempCode> dbCodes = new HashSet<TempCode>();
