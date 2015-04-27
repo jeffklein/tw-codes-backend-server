@@ -24,8 +24,10 @@ public class TempCodeApiPoller {
     @Autowired
     private TempCodeService tempCodeService;
 
-    @Scheduled(fixedRate = 20000)
-    //TODO: this works exactly once then blows up with a Unique constraint violation. write a test case in the DAO module
+    /**
+     * Cron expression is set to poll once per hour, on the hour.
+     */
+    @Scheduled(cron = "0 0 * * * *")
     public void pollServerForTempCodes() {
         Set<TempCodeDTO> apiResponse = apiClient.getTempCodes();
         Set<TempCode> toPersist = this.copyTempCodesFromJsonResponse(apiResponse);
