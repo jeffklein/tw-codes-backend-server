@@ -1,10 +1,10 @@
 package org.jeffklein.turfwars.codes.backend.config;
 
 import org.jeffklein.turfwars.codes.client.TurfWarsApiClient;
+import org.jeffklein.turfwars.codes.dataaccess.config.HibernateConfiguration;
 import org.jeffklein.turfwars.codes.dataaccess.service.TempCodeService;
 import org.jeffklein.turfwars.codes.dataaccess.service.TempCodeServiceImpl;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -16,7 +16,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  */
 @Configuration
 @EnableScheduling
-@Import(org.jeffklein.turfwars.codes.dataaccess.config.HibernateConfiguration.class)
+@Import(HibernateConfiguration.class)
 public class SpringConfiguration {
     @Bean
     public TurfWarsApiClient getTurfWarsApiClient() {
