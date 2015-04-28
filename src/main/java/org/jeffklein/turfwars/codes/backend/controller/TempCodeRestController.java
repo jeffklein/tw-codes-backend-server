@@ -2,7 +2,8 @@ package org.jeffklein.turfwars.codes.backend.controller;
 
 import org.jeffklein.turfwars.codes.dataaccess.model.TempCode;
 import org.jeffklein.turfwars.codes.dataaccess.service.TempCodeService;
-import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,15 +32,19 @@ public class TempCodeRestController {
         for (TempCode tempCode : tempCodes) {
             Code code = new Code();
             code.code = tempCode.getCode();
-            code.expirationDate = tempCode.getExpirationDate();
+            code.expirationDateTimeMillis = tempCode.getExpirationDate().getMillis();
+            DateTimeFormatter formatter = DateTimeFormat.forPattern("MM-dd-yyyy HH:mm:ss z").withZoneUTC();
+            code.expirationDateTimeFormmattedUTC = tempCode.getExpirationDate().toString(formatter);
             codes.add(code);
         }
-        model.put("codes", codes);
+        model.put("temp_codes_size", codes.size());
+        model.put("temp_codes", codes);
         return model;
     }
 
     private static class Code {
         public String code;
-        public DateTime expirationDate;
+        public long expirationDateTimeMillis;
+        public String expirationDateTimeFormmattedUTC;
     }
 }
