@@ -19,6 +19,17 @@
         <!-- lookup parent from repository -->
     </parent>
 
+    <repositories>
+        <repository>
+            <id>jeffklein-snapshots</id>
+            <url>https://github.com/jeffklein/mvn-repo/raw/master/snapshots</url>
+        </repository>
+        <repository>
+            <id>jeffklein-releases</id>
+            <url>https://github.com/jeffklein/mvn-repo/raw/master/releases</url>
+        </repository>
+    </repositories>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <start-class>org.jeffklein.turfwars.codes.backend.BackendServerApplication</start-class>
@@ -75,7 +86,7 @@
         <dependency>
             <groupId>org.jeffklein.turfwars</groupId>
             <artifactId>tw-codes-api-client</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.1</version>
         </dependency>
         <dependency>
             <groupId>org.jeffklein.turfwars</groupId>
