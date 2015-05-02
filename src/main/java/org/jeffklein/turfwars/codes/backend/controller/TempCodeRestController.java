@@ -5,8 +5,9 @@ import org.jeffklein.turfwars.codes.dataaccess.service.TempCodeService;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,5 +47,16 @@ public class TempCodeRestController {
         public String code;
         public long expirationDateTimeMillis;
         public String expirationDateTimeFormmattedUTC;
+    }
+
+    @RequestMapping(
+            value = "/codes/temp/add",
+            consumes = "application/json",
+            method = {RequestMethod.POST, RequestMethod.PUT}
+    )
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> tempCodeWebHook(@RequestBody Object input) {
+        System.out.println(input.getClass()+":"+input);
+        return new ResponseEntity<Object>(HttpStatus.CREATED);
     }
 }
