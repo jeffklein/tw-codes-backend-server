@@ -9,10 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * TODO: javadoc needed
@@ -56,7 +53,12 @@ public class TempCodeRestController {
     )
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> tempCodeWebHook(@RequestBody Object input) {
-        System.out.println(input.getClass()+":"+input);
+        LinkedHashMap<String, Object> inputMap = (LinkedHashMap<String, Object>) input;
+        LinkedHashMap<String, Object> resultsMap= (LinkedHashMap<String, Object>)inputMap.get("results");
+        ArrayList<LinkedHashMap<String, Object>> codesList = (ArrayList<LinkedHashMap<String, Object>>) resultsMap.get("codes");
+        for(LinkedHashMap<String, Object> code : codesList) {
+            System.out.println(code.get("code") + ": " + code.get("expiresraw"));
+        }
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }
 }
