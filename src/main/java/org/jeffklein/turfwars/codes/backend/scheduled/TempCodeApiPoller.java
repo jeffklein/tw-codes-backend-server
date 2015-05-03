@@ -40,9 +40,9 @@ public class TempCodeApiPoller {
         for (TempCodeDTO jsonCode : jsonCodes) {
             TempCode dbCode = new TempCode();
             dbCode.setCode(jsonCode.getCode());
-            dbCode.setExpirationDate(new DateTime(jsonCode.getExpirationDate()));
-            dbCode.setNextUpdateTimestamp(new DateTime(jsonCode.getNextUpdateTimestamp()));
-            dbCode.setServerTimestamp(new DateTime(jsonCode.getServerTimestamp()));
+            dbCode.setExpirationDate(new DateTime(jsonCode.getExpirationDate()*1000));
+            dbCode.setNextUpdateTimestamp(new DateTime(jsonCode.getNextUpdateTimestamp()*1000));
+            dbCode.setServerTimestamp(new DateTime(jsonCode.getServerTimestamp()*1000));
             dbCodes.add(dbCode);
         }
         return dbCodes;
