@@ -9,6 +9,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -80,9 +81,11 @@ public class TempCodeRestController {
             //TODO: parse next update and server timestamps out of the kimono labs JSON
             tempCode.setNextUpdateTimestamp(new DateTime(DateTimeZone.forID("UTC")));
             tempCode.setServerTimestamp(new DateTime(DateTimeZone.forID("UTC")));
-            //System.out.println(codeStr + " || " + dateStr+" || "+timeStr+" || "+combineDateAndTime(dateStr, timeStr).toString());
             twukTemps.add(tempCode);
         }
+        Integer count = (Integer)inputMap.get("count");
+        Assert.isTrue(count == twukTemps.size(), "count from json: "+count+". twuktempsize: "+twukTemps.size());
+        System.out.println("Received "+twukTemps.size()+" temp codes from Kimono Labs TW-UK webhook.");
         this.tempCodeService.saveTempCodeBatch(twukTemps);
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }
