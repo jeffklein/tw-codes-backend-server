@@ -70,6 +70,7 @@ public class TempCodeRestController {
             String dateStr = dateTimeRawSplit[0]; // May 10
             String timeStr = dateTimeRawSplit[1]; // 01:44 PM
             tempCode.setExpirationDate(combineDateAndTime(dateStr, timeStr));
+            //TODO: parse next update and server timestamps out of the kimono labs JSON
             tempCode.setNextUpdateTimestamp(new DateTime(DateTimeZone.forID("UTC")));
             tempCode.setServerTimestamp(new DateTime(DateTimeZone.forID("UTC")));
             //System.out.println(codeStr + " || " + dateStr+" || "+timeStr+" || "+combineDateAndTime(dateStr, timeStr).toString());
