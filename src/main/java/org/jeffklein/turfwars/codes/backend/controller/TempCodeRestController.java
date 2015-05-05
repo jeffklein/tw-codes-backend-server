@@ -1,5 +1,7 @@
 package org.jeffklein.turfwars.codes.backend.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jeffklein.turfwars.codes.dataaccess.model.TempCode;
 import org.jeffklein.turfwars.codes.dataaccess.service.TempCodeService;
 import org.joda.time.DateTime;
@@ -21,6 +23,8 @@ import java.util.*;
  */
 @RestController
 public class TempCodeRestController {
+
+    private static Log LOG = LogFactory.getLog(TempCodeRestController.class);
 
     @Autowired
     private TempCodeService tempCodeService;
@@ -85,8 +89,8 @@ public class TempCodeRestController {
         }
         Integer count = (Integer)inputMap.get("count");
         Assert.isTrue(count == twukTemps.size(), "count from json: "+count+". twuktempsize: "+twukTemps.size());
-        System.out.println("Received "+twukTemps.size()+" temp codes from Kimono Labs TW-UK webhook.");
-        this.tempCodeService.saveTempCodeBatch(twukTemps);
+        Integer numPersisted = this.tempCodeService.saveTempCodeBatch(twukTemps);
+        LOG.info("Persisted "+numPersisted+" out of "+twukTemps.size()+" temp codes from Kimono Labs TW-UK webhook.");
         return new ResponseEntity<Object>(HttpStatus.CREATED);
     }
 

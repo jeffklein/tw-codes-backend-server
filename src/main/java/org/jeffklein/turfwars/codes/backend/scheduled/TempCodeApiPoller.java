@@ -1,5 +1,7 @@
 package org.jeffklein.turfwars.codes.backend.scheduled;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jeffklein.turfwars.codes.client.TempCodeDTO;
 import org.jeffklein.turfwars.codes.client.TurfWarsApiClient;
 import org.jeffklein.turfwars.codes.dataaccess.model.TempCode;
@@ -24,6 +26,8 @@ public class TempCodeApiPoller {
     @Autowired
     private TempCodeService tempCodeService;
 
+    private static Log LOG = LogFactory.getLog(TempCodeApiPoller.class);
+
     /**
      * Cron expression is set to poll once per hour, on the hour.
      */
@@ -31,10 +35,10 @@ public class TempCodeApiPoller {
     public void pollServerForTempCodes() {
         Set<TempCodeDTO> apiResponse = apiClient.getTempCodes();
         Set<TempCode> toPersist = this.copyTempCodesFromJsonResponse(apiResponse);
-        tempCodeService.saveTempCodeBatch(toPersist);
+        Integer count = tempCodeService.saveTempCodeBatch(toPersist);
+        LOG.info("Persisted "+count+" temp codes out of "+apiResponse.size()+" that were retrieved via the TurfWarsApiClient");
     }
 
-    // TODO: copying fields one at a time is for the birds. need annotation based DTO copying here...
     private Set<TempCode> copyTempCodesFromJsonResponse(Set<TempCodeDTO> jsonCodes) {
         Set<TempCode> dbCodes = new HashSet<TempCode>();
         for (TempCodeDTO jsonCode : jsonCodes) {
