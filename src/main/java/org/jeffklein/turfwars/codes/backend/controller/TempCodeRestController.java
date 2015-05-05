@@ -6,7 +6,6 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimePrinter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,16 +25,24 @@ public class TempCodeRestController {
     private TempCodeService tempCodeService;
 
     @RequestMapping("/codes/temp/all")
-    public Map<String, Object> home() {
+    public Map<String, Object> allTemps() {
+        return this.createModelFromTempCodeList(tempCodeService.findAllTempCodes());
+    }
+
+    @RequestMapping("/codes/temp/valid")
+    public Map<String, Object> validTemps() {
+        return this.createModelFromTempCodeList(tempCodeService.findAllUnexpiredTempCodes());
+    }
+
+    private Map<String, Object> createModelFromTempCodeList(List<TempCode> tempCodes) {
         Map<String, Object> model = new HashMap<String, Object>();
-        List<TempCode> tempCodes = tempCodeService.findAllTempCodes();
         List codes = new ArrayList();
         for (TempCode tempCode : tempCodes) {
             Code code = new Code();
             code.code = tempCode.getCode();
-            code.expirationDateTimeMillis = tempCode.getExpirationDate().getMillis();
+            code.expiresMillis = tempCode.getExpirationDate().getMillis();
             DateTimeFormatter formatter = DateTimeFormat.forPattern("MM-dd-yyyy HH:mm:ss z").withZoneUTC();
-            code.expirationDateTimeFormmattedUTC = tempCode.getExpirationDate().toString(formatter);
+            code.expiresFormatted = tempCode.getExpirationDate().toString(formatter);
             codes.add(code);
         }
         model.put("temp_codes_size", codes.size());
@@ -45,8 +52,8 @@ public class TempCodeRestController {
 
     private static class Code {
         public String code;
-        public long expirationDateTimeMillis;
-        public String expirationDateTimeFormmattedUTC;
+        public long expiresMillis;
+        public String expiresFormatted;
     }
 
     @RequestMapping(
@@ -87,14 +94,7 @@ public class TempCodeRestController {
                 .withTime(time.getHourOfDay(),time.getMinuteOfHour(), time.getSecondOfMinute(), time.getMillisOfSecond());
     }
 
-    public static void main(String[] args) {
-        // TODO: turn this into a test
-        String dateStr = "May 10";
-        String timeStr = "01:44 PM";
-        DateTime mergeDateTime = combineDateAndTime(dateStr, timeStr);
-        System.out.println(mergeDateTime.toString());
-    }
-    public static DateTime determineDate(String dateStr) {
+    private static DateTime determineDate(String dateStr) {
         dateStr += " UTC";
         DateTime partialDate = DateTime.parse(dateStr, DateTimeFormat.forPattern("MMM dd zzz"));
         DateTime currDate = new DateTime(DateTimeZone.forID("UTC"));
