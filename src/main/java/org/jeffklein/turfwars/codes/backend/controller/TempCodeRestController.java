@@ -21,7 +21,7 @@ import java.util.*;
  *
  * @author jeffklein
  */
-@RestController
+@RestController("/api")
 public class TempCodeRestController {
 
     private static Log LOG = LogFactory.getLog(TempCodeRestController.class);
@@ -29,12 +29,22 @@ public class TempCodeRestController {
     @Autowired
     private TempCodeService tempCodeService;
 
-    @RequestMapping("/codes/temp/all")
+    @RequestMapping(
+            value = "/codes/{game}/temp/all",
+            produces = "application/json",
+            method = RequestMethod.GET)
+    public Map<String, Object> allTemps(@PathVariable("game") String game) {
+        Map<String, Object> model = this.createModelFromTempCodeList(tempCodeService.findAllTempCodes());
+        model.put("game". game);
+        return model;
+    }
+
+    @RequestMapping(value = "/codes/temp/all", produces = "application/json")
     public Map<String, Object> allTemps() {
         return this.createModelFromTempCodeList(tempCodeService.findAllTempCodes());
     }
 
-    @RequestMapping("/codes/temp/valid")
+    @RequestMapping(value = "/codes/temp/valid", produces = "application/json")
     public Map<String, Object> validTemps() {
         return this.createModelFromTempCodeList(tempCodeService.findAllUnexpiredTempCodes());
     }
@@ -50,7 +60,7 @@ public class TempCodeRestController {
             code.expiresFormatted = tempCode.getExpirationDate().toString(formatter);
             codes.add(code);
         }
-        model.put("temp_codes_size", codes.size());
+        model.put("size", codes.size());
         model.put("temp_codes", codes);
         return model;
     }
