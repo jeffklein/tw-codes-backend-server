@@ -35,7 +35,7 @@ public class TempCodeRestController {
             method = RequestMethod.GET)
     public Map<String, Object> allTemps(@PathVariable("game") String game) {
         Map<String, Object> model = this.createModelFromTempCodeList(tempCodeService.findAllTempCodes());
-        model.put("game". game);
+        model.put("game", game);
         return model;
     }
 
