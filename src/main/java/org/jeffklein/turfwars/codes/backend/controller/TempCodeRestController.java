@@ -21,7 +21,7 @@ import java.util.*;
  *
  * @author jeffklein
  */
-@RestController("/api")
+@RestController
 public class TempCodeRestController {
 
     private static Log LOG = LogFactory.getLog(TempCodeRestController.class);
@@ -47,6 +47,16 @@ public class TempCodeRestController {
     @RequestMapping(value = "/codes/temp/valid", produces = "application/json")
     public Map<String, Object> validTemps() {
         return this.createModelFromTempCodeList(tempCodeService.findAllUnexpiredTempCodes());
+    }
+
+    @RequestMapping(value = "/codes/temp/valid/plain", produces = "text/plain")
+    public String validTempsPlainText() {
+        List<TempCode> tempCodes = tempCodeService.findAllUnexpiredTempCodes();
+        StringBuilder builder = new StringBuilder();
+        for(TempCode code : tempCodes) {
+            builder.append(code.getCode()+" ");
+        }
+        return builder.toString();
     }
 
     private Map<String, Object> createModelFromTempCodeList(List<TempCode> tempCodes) {
