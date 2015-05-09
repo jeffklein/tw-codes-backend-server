@@ -64,6 +64,7 @@ public class TempCodeRestController {
         List codes = new ArrayList();
         for (TempCode tempCode : tempCodes) {
             Code code = new Code();
+            code.id = tempCode.getId();
             code.code = tempCode.getCode();
             code.expiresMillis = tempCode.getExpirationDate().getMillis();
             DateTimeFormatter formatter = DateTimeFormat.forPattern("MM-dd-yyyy HH:mm:ss z").withZoneUTC();
@@ -76,6 +77,7 @@ public class TempCodeRestController {
     }
 
     private static class Code {
+        public int id;
         public String code;
         public long expiresMillis;
         public String expiresFormatted;
